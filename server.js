@@ -199,6 +199,10 @@ app.get('/serial-warrenty', (req, res) => {
     res.render('admin/serial-warrenty');
 });
 
+app.get('/temp', (req, res) => {
+    res.render('temp');
+});
+
 
 // Multer storage configuration
 const storage = multer.diskStorage({
