@@ -1,0 +1,32 @@
+Phase 1: Basic Questions
+
+What is Node.js and why is it used?
+What is the difference between Node.js and a traditional web server?
+What is Express.js and how does it relate to Node.js?
+What are some of the key features of Express.js?
+How do you handle routing in Express.js?
+What is middleware in Express.js and how do you use it?
+How do ?you handle errors in Express.js
+What is the purpose of npm and how do you use it?
+
+Phase 2: Intermediate Questions
+
+How do you handle form data in Express.js?
+How do you handle file uploads in Express.js?
+How do you handle sessions in Express.js?
+How do you handle CORS in Express.js?
+How do you handle authentication and authorization in Express.js?
+How do you handle database connections in Express.js?
+How do you handle template engines in Express.js?
+How do you handle environment variables in Express.js?
+Phase 3: Advanced Questions
+
+How do you handle performance optimization in Express.js?
+How do you handle security vulnerabilities in Express.js?
+How do you handle testing in Express.js?
+How do you handle deployment in Express.js?
+How do you handle clustering in Express.js?
+How do you handle load balancing in Express.js?
+How do you handle microservices in Express.js?
+How do you handle web sockets in Express.js?
+Edit

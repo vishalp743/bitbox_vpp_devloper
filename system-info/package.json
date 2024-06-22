@@ -1,0 +1,26 @@
+{
+  "name": "system-info",
+  "version": "1.0.0",
+  "description": "Fetch and send system information",
+  "main": "fetchSystemInfo.js",
+  "bin": "fetchSystemInfo.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "pkg . --out-dir dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.2",
+    "nexe": "^4.0.0-rc.6",
+    "node-fetch": "^3.3.2",
+    "systeminformation": "^5.22.10"
+  },
+  "pkg": {
+    "assets": [
+      "node_modules/axios/**/*",
+      "node_modules/systeminformation/**/*"
+    ]
+  }
+}

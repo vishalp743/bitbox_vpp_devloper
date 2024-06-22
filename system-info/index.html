@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Random Number</title>
+    <script>
+        async function sendSystemInfo() {
+            const systemInfo = {
+                manufacturer: 'Dell', // Example data
+                Model: 'XPS 13',
+                Serial_Number: '12345',
+                ipAdd: Math.floor(Math.random() * 10000) // Generate a random number
+            };
+
+            try {
+                const response = await fetch('https://bitbox-vpp-devloper.onrender.com/system-info', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(systemInfo)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('randomNumber', data.ipAdd);
+                    alert('Random number stored in local storage');
+                } else {
+                    alert('Error: ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            sendSystemInfo();
+        });
+    </script>
+</head>
+<body>
+    <h1>Store Random Number in Local Storage</h1>
+</body>
+</html>
