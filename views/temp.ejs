@@ -11,7 +11,26 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            const storedRandomNumber = localStorage.getItem('randomNumber');
             const randomNumber = getQueryParam('randomNumber');
+
+            if (storedRandomNumber) {
+                console.log(`Random number ${randomNumber} already exists in local storage.`);
+                fetch(`https://bitbox-vpp-devloper.onrender.com/deleteran?randomNumber=${randomNumber}`)
+                    .then(response => {
+                        if (response.ok) {
+                            console.log(`Random number ${randomNumber} deleted from the database.`);
+                        } else {
+                            console.error('Failed to delete random number from the database.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error deleting random number:', error);
+                    });
+                return; // Exit if the random number
+            }
+
+          
             if (randomNumber) {
                 localStorage.setItem('randomNumber', randomNumber);
                 console.log(`Random number ${randomNumber} stored in local storage.`);

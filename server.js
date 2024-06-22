@@ -154,6 +154,27 @@ app.get('/latest-driver', async (req, res) => {
         res.status(500).send('Error fetching drivers');
     }
 });
+// Delete route
+app.get('/deleteran', async (req, res) => {
+    const randomNumber = req.query.randomNumber;
+
+    if (!randomNumber) {
+        return res.status(400).send('Random number is required');
+    }
+
+    try {
+        const result = await SystemInfo.findOneAndDelete({ ipAdd: randomNumber });
+
+        if (result) {
+            res.status(200).send(`Entry with random number ${randomNumber} deleted`);
+        } else {
+            res.status(404).send('Entry not found');
+        }
+    } catch (error) {
+        console.error('Error deleting entry:', error);
+        res.status(500).send('Internal server error');
+    }
+});
 
 
 // Warranty Check Route
