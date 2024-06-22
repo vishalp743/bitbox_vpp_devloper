@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Random Number</title>
+    <script>
+        async function fetchRandomNumber() {
+            try {
+                var randomNumber = 1234;
+                localStorage.setItem('randomNumber', randomNumber);
+                alert('Random number stored in local storage: ' + randomNumber);
+            } catch (error) {
+                console.error('Error fetching random number:', error);
+            }
+        }
+    
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchRandomNumber();
+        });
+    </script>
+    
+    
+</head>
+<body>
+    <h1>Store Random Number in Local Storage</h1>
+</body>
+</html>

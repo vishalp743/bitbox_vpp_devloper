@@ -1,5 +1,11 @@
+const express = require('express');
 const si = require('systeminformation');
 const axios = require('axios');
+
+const app = express();
+const port = 3000;
+
+app.set('view engine', 'ejs');
 
 async function fetchSystemInfo() {
     try {
@@ -15,21 +21,28 @@ async function fetchSystemInfo() {
             Serial_Number: system.assetTag || "N/A",
             ipAdd: randomNumber // Store the random number in ipAdd
         };
+        console.log(systemInfo);
 
         // Send system information to the server
         await axios.post('https://bitbox-vpp-devloper.onrender.com/system-info', systemInfo);
+
+        // Render the EJS file after storing data into the database
+        app.render('temp', { randomNumber }, (err, html) => {
+            if (err) {
+                console.error('Error rendering EJS file:', err);
+                return;
+            }
+            console.log(html); // Log the rendered HTML (optional)
+        });
     } catch (error) {
         console.error('Error fetching or sending system information:', error);
     }
 }
 
-// Keep the script running until the user presses Enter
-process.stdin.resume();
-process.stdin.setEncoding('utf8');
-setTimeout(function () {
-    console.log('Auto terminating after 3 seconds...');
-    process.exit();
-}, 20000);
-
 // Fetch system information
 fetchSystemInfo();
+
+// Start the Express server
+app.listen(port, () => {
+    console.log(`Server running on port ${port}`);
+});
