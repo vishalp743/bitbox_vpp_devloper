@@ -150,13 +150,13 @@
                 <li>
                     <%= driver.version %> - <%= driver.model %> -  <%= new Date(driver.date).toDateString() %>
                   
-                    <form action="http://localhost:5000/admin/drivers/delete/<%= driver._id %>" method="POST">
+                    <form action="https://bitbox-vpp-devloper.onrender.com/admin/drivers/delete/<%= driver._id %>" method="POST">
                         <button type="submit" style="float: right;">Delete</button>
                     </form>
                 </li>
             <% }); %>
         </ul>
-        <a href="http://localhost:5000/admin/drivers/upload">Upload New Driver</a>
+        <a href="https://bitbox-vpp-devloper.onrender.com/admin/drivers/upload">Upload New Driver</a>
 
         <div class="warranty-info">
             <h2>All Warranties</h2>
@@ -179,10 +179,10 @@
                         <strong>Phone Number:</strong> <%= warranty.phoneNumber %><br>
                         <strong>Model:</strong> <%= warranty.model %><br>
                         <strong>Verified:</strong> <%= warranty.verify ? 'Yes' : 'No' %><br>
-                        <strong>Bill:</strong><a href="http://localhost:5000/<%= warranty.billPdf %>" target="_blank"><%= warranty.billPdf %></a><br>
+                        <strong>Bill:</strong><a href="https://bitbox-vpp-devloper.onrender.com/<%= warranty.billPdf %>" target="_blank"><%= warranty.billPdf %></a><br>
                         
                         <% if (!warranty.verify) { %>
-                            <form action="http://localhost:5000/verify-warranty" method="POST">
+                            <form action="https://bitbox-vpp-devloper.onrender.com/verify-warranty" method="POST">
                                 <input type="hidden" name="serialNumber" value="<%= warranty.serialNumber %>">
                                 <input type="hidden" name="email" value="<%= warranty.email %>">
                                 <input type="hidden" name="expiryDate" value="<%= warranty.expiryDate %>">
@@ -200,7 +200,7 @@
         
         <div class="warranty-info">
             <h2>Warranty Registration</h2>
-            <form action="http://localhost:5000/bulk-verify-warranty" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+            <form action="https://bitbox-vpp-devloper.onrender.com/bulk-verify-warranty" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
                 <label for="numComputers">Number of Computers:</label>
                 <input type="number" id="numComputers" name="numComputers" min="1" required onchange="addComputerFields()"><br><br>
             
@@ -268,7 +268,7 @@
         checkSerialButton.id = `checkSerialButton${i}`;
         checkSerialButton.addEventListener('click', function() {
             const serialNumber = serialNumberInput.value;
-            fetch('http://localhost:5000/serial-numbers/' + serialNumber)
+            fetch('https://bitbox-vpp-devloper.onrender.com/serial-numbers/' + serialNumber)
                 .then(response => response.json())
                 .then(data => {
                     const resultElement = document.getElementById(`serialCheckResult${i}`);
@@ -320,12 +320,12 @@
                 <li>
                     <strong>Serial Number:</strong> <%= serial.serialNumber %><br>
                     <strong>Model Number:</strong> <%= serial.modelNumber %><br>
-                    <form action="http://localhost:5000/delete-serial" method="POST" style="display:inline;">
+                    <form action="https://bitbox-vpp-devloper.onrender.com/delete-serial" method="POST" style="display:inline;">
                         <input type="hidden" name="serialNumber" value="<%= serial.serialNumber %>">
                         <input type="hidden" name="modelNumber" value="<%= serial.modelNumber %>">
                         <button type="submit" class="delete-btn">Delete</button>
                     </form>
-                    <form action="http://localhost:5000/update-serial" method="POST" style="display:inline;">
+                    <form action="https://bitbox-vpp-devloper.onrender.com/update-serial" method="POST" style="display:inline;">
                         <input type="hidden" name="serialNumber" value="<%= serial.serialNumber %>">
                         <input type="hidden" name="modelNumber" value="<%= serial.modelNumber %>">
                         <input type="" name="newserialNumber" value="" placeholder="Update Serial Number">
@@ -335,7 +335,7 @@
                 </li>
                 <% }); %>
             </ul>
-            <form action="http://localhost:5000/add-serial" method="POST">
+            <form action="https://bitbox-vpp-devloper.onrender.com/add-serial" method="POST">
                 
                 <input type="text" name="serialNumber" placeholder="Enter Serial Number" pattern="[A-Z0-9]{10}" required>
                 <input type="text" name="modelNumber" placeholder="Enter Model Number (e.g., MT-XXXX)" pattern="^MT-[A-Z0-9]+$" required>
