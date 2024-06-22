@@ -5,24 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Store Random Number</title>
     <script>
-        async function fetchRandomNumber() {
-            try {
-                var randomNumber = 1234;
-                localStorage.setItem('randomNumber', randomNumber);
-               
-            } catch (error) {
-                console.error('Error fetching random number:', error);
-            }
+        function getQueryParam(param) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(param);
         }
-    
+
         document.addEventListener('DOMContentLoaded', () => {
-            fetchRandomNumber();
+            const randomNumber = getQueryParam('randomNumber');
+            if (randomNumber) {
+                localStorage.setItem('randomNumber', randomNumber);
+                console.log(`Random number ${randomNumber} stored in local storage.`);
+            } else {
+                console.error('Random number not found in query parameters.');
+            }
         });
     </script>
-    
-    
 </head>
 <body>
-    <h1>Store Random Number in Local Storage</h1>
+    <h1>System Utility Executed Successfully. Now go back to Support Page.</h1>
 </body>
 </html>

