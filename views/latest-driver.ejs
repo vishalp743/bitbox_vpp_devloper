@@ -67,10 +67,10 @@
                 <% 
                     let fullDownloadLink = driver.downloadLink;
                     if (!fullDownloadLink.startsWith('http://') && !fullDownloadLink.startsWith('https://')) {
-                        fullDownloadLink = 'https://bitbox-vpp-devloper.onrender.com' + fullDownloadLink;
+                        fullDownloadLink = 'http://localhost:5000' + fullDownloadLink;
                     }
                 %>
-                <p>Download Link: <a href="https://bitbox-vpp-devloper.onrender.com<%= driver.downloadLink %>">Download</a></p>
+                <p>Download Link: <a href="http://localhost:5000<%= driver.downloadLink %>">Download</a></p>
             </li>
         </ul>
     <% } else { %>

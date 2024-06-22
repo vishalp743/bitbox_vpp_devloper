@@ -105,8 +105,6 @@ app.post('/system-info', async (req, res) => {
             ipAdd:  ipAdd
         };
 
-        
-
         // Find an existing entry with the same ipAdd and update it, or create a new entry if it doesn't exist
         const existingSystemInfo = await SystemInfo.findOneAndUpdate(
             { ipAdd },
@@ -116,7 +114,7 @@ app.post('/system-info', async (req, res) => {
         // Save systemInfo to session
         // req.session.systemInfo = systemInfo;
         
-        res.status(200).json(systemInfo);
+        res.render('temp');
     } catch (error) {
         console.error('Error saving system information:', error);
         res.status(500).send('Error saving system information');
@@ -639,7 +637,7 @@ app.post('/admin/drivers/upload', isAuthenticated, upload.single('driverFile'), 
                     <br><br>
                     To download the latest driver update :
                     <br>
-                    1.Visit : https://bitbox-vpp-devloper.onrender.com/
+                    1.Visit : http://localhost:5000/
   <br>
                     2.Click on “Check Your Device Info”
  <br>

@@ -101,7 +101,7 @@
 <body>
     <div class="form-container" style="margin-top:30%">
         <h1>Register Your Warranty</h1>
-        <form id="warrantyForm" action="https://bitbox-vpp-devloper.onrender.com/register-warranty" method="post" enctype="multipart/form-data">
+        <form id="warrantyForm" action="http://localhost:5000/register-warranty" method="post" enctype="multipart/form-data">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required><br>
             <label for="email">Email:</label>
@@ -183,7 +183,7 @@
         // Serial number validation button
         document.getElementById('checkSerialButton').addEventListener('click', function() {
             const serialNumber = document.getElementById('serialNumber').value;
-            fetch('https://bitbox-vpp-devloper.onrender.com/serial-numbers/' + serialNumber)
+            fetch('http://localhost:5000/serial-numbers/' + serialNumber)
                 .then(response => response.json())
                 .then(data => {
                     const resultElement = document.getElementById('serialCheckResult');
