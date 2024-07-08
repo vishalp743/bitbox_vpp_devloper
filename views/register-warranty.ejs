@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register Warranty</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #ff6900;
+            margin-bottom: 20px;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 50%;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        input[type="file"],
+        input[type="tel"],
+        select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        button[type="submit"] {
+            background-color: #ff6900;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        button[type="submit"]:hover {
+            background-color: #005f8c;
+        }
+
+        a {
+            color: #007db8;
+            text-decoration: none;
+            display: block;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+
+        #checkSerialButton {
+            background-color: #007db8;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        #checkSerialButton:hover {
+            background-color: #005f8c;
+        }
+
+        .success-message {
+            color: green;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container" style="margin-top:30%">
+        <h1>Register Your Warranty</h1>
+        <form id="warrantyForm" action="https://bitbox-vpp-devloper.onrender.com/register-warranty" method="post" enctype="multipart/form-data">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br>
+            
+            <div id="serialNumberContainer">
+                <div class="serial-number-group">
+                    <label for="serialNumber">Device Serial Number:</label>
+                    <input type="text" class="serialNumber" name="serialNumber[]" maxlength="10" required>
+                    <button type="button" class="checkSerialButton">Validate</button>
+                    <p class="serialCheckResult"></p><br>
+                </div>
+            </div>
+            <button type="button" id="addSerialButton">Add Serial Number</button><br>
+            
+            <label for="purchaseDate">Purchase Date:</label>
+            <input type="date" id="purchaseDate" name="purchaseDate" required><br>
+            <label for="expiryDate">Expiry Date:</label>
+            <select id="expiryDate" name="expiryDate" required>
+                <option value="1">1 Year</option>
+                <option value="2">2 Years</option>
+                <option value="3">3 Years</option>
+                <option value="4">4 Years</option>
+            </select><br>
+            <label for="address">Address:</label>
+            <input type="text" id="address" name="address" required><br>
+            <label for="city">City:</label>
+            <input type="text" id="city" name="city" required><br>
+            <label for="pincode">Pincode:</label>
+            <input type="text" id="pincode" name="pincode" required><br>
+            <label for="state">State:</label>
+            <input type="text" id="state" name="state" required><br>
+            <label for="phoneNumber">Phone Number:</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" value="+91" required><br>
+            <label for="model">Model:</label>
+            <input type="text" id="model" name="model" required><br>
+            <label for="billPdf">Upload Bill PDF:</label>
+            <input type="file" id="billPdf" name="billPdf" accept="application/pdf" required><br>
+            <button type="submit">Register</button>
+        </form>
+        <% if (typeof message !== 'undefined') { %>
+            <p class="error-message"><%= message %></p>
+        <% } %>
+        <a href="/">Back to Home</a>
+    </div>
+    <script>
+        document.getElementById('addSerialButton').addEventListener('click', function() {
+            const container = document.getElementById('serialNumberContainer');
+            const div = document.createElement('div');
+            div.className = 'serial-number-group';
+            div.innerHTML = `
+                <label for="serialNumber">Device Serial Number:</label>
+                <input type="text" class="serialNumber" name="serialNumber[]" maxlength="10" required>
+                <button type="button" class="checkSerialButton">Validate</button>
+                <p class="serialCheckResult"></p><br>
+            `;
+            container.appendChild(div);
+            attachValidationListeners(div);
+        });
+
+        function attachValidationListeners(parent) {
+            const serialInput = parent.querySelector('.serialNumber');
+            const checkButton = parent.querySelector('.checkSerialButton');
+            const resultElement = parent.querySelector('.serialCheckResult');
+
+            serialInput.addEventListener('input', function() {
+                this.value = this.value.toUpperCase();
+            });
+
+            checkButton.addEventListener('click', function() {
+                const serialNumber = serialInput.value;
+                fetch('https://bitbox-vpp-devloper.onrender.com/serial-numbers/' + serialNumber)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.valid) {
+                            resultElement.textContent = 'Serial number is valid.';
+                            resultElement.className = 'success-message';
+                            parent.querySelector('.serialNumber').dataset.model = data.model;
+                        } else {
+                            resultElement.textContent = 'Serial number is invalid.';
+                            resultElement.className = 'error-message';
+                        }
+                    })
+                    .catch(error => console.error('Error checking serial number:', error));
+            });
+        }
+
+        document.querySelectorAll('.serial-number-group').forEach(group => {
+            attachValidationListeners(group);
+        });
+
+        document.getElementById('warrantyForm').addEventListener('submit', function(event) {
+            const serialNumberInputs = document.querySelectorAll('.serialNumber');
+            serialNumberInputs.forEach(input => {
+                if (!/^[A-Z0-9]{10}$/.test(input.value)) {
+                    alert('Serial number must be exactly 10 characters long and contain only uppercase letters and digits.');
+                    event.preventDefault();
+                }
+            });
+
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            if (phoneNumber.length !== 13 || !phoneNumber.startsWith('+91')) {
+                alert('Phone number must be 10 digits long and start with the country code +91.');
+                event.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

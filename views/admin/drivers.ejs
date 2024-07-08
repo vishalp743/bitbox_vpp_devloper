@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Drivers</title>
+</head>
+<body>
+    <h1>All Drivers</h1>
+    <ul>
+        <% drivers.forEach(driver => { %>
+            <li>
+                <%= driver.name %> - <%= driver.serial %> - <%= driver.model %>
+                <form action="https://bitbox-vpp-devloper.onrender.com/admin/drivers/delete/<%= driver._id %>" method="POST">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+        <% }); %>
+    </ul>
+    <a href="https://bitbox-vpp-devloper.onrender.com/admin/dashboard">Back to Dashboard</a>
+</body>
+</html>

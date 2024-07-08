@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #ff6600;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background: #fff5e6;
+            margin: 10px 0;
+            padding: 15px;
+            border: 1px solid #ffcc99;
+            border-radius: 5px;
+        }
+
+        li form {
+            display: inline;
+        }
+
+        button, input[type="submit"] {
+            background-color: #ff6600;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            margin-left: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover, input[type="submit"]:hover {
+            background-color: #e65c00;
+        }
+
+        a {
+            display: inline-block;
+            text-align: center;
+            background-color: #ff6600;
+            color: white;
+            padding: 10px 20px;
+            margin: 20px 0;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        a:hover {
+            background-color: #e65c00;
+        }
+
+        .warranty-info, .serial-info {
+            margin-top: 40px;
+        }
+
+        .warranty-info strong, .serial-info strong {
+            display: inline-block;
+            width: 150px;
+        }
+
+        .warranty-info form {
+            background-color: #fff5e6;
+            padding: 20px;
+            border-radius: 5px;
+            border: 1px solid #ffcc99;
+            margin-top: 20px;
+        }
+
+        .warranty-info label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ff6600;
+        }
+
+        .warranty-info input,
+        .warranty-info select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ffcc99;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .warranty-info button {
+            background-color: #ff6600;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .warranty-info button:hover {
+            background-color: #e65c00;
+        }
+
+        .computer {
+            background-color: #fff5e6;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ffcc99;
+        }
+
+        .computer h3 {
+            color: #ff6600;
+        }
+
+        .computer label {
+            color: #ff6600;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Warranty Admin Dashboard</h1>
+        
+        
+
+        <div class="warranty-info">
+            <h2>All Warranties</h2>
+            <div>
+                <button onclick="filterWarranties('verified')">Verified</button>
+                <button onclick="filterWarranties('unverified')">Unverified</button>
+            </div>
+            <ul id="warrantyList">
+                <% warranties.forEach(warranty => { %>
+                    <li class="<%= warranty.verify ? 'verified' : 'unverified' %>">
+                        <strong>Serial Number:</strong> <%= warranty.serialNumber %><br>
+                        <strong>Expiry Date:</strong> <%= warranty.expiryDate %><br>
+                        <strong>Name:</strong> <%= warranty.name %><br>
+                        <strong>Email:</strong> <%= warranty.email %><br>
+                        <strong>Purchase Date:</strong> <%= warranty.purchaseDate.toDateString() %><br>
+                        <strong>Address:</strong> <%= warranty.address %><br>
+                        <strong>City:</strong> <%= warranty.city %><br>
+                        <strong>Pincode:</strong> <%= warranty.pincode %><br>
+                        <strong>State:</strong> <%= warranty.state %><br>
+                        <strong>Phone Number:</strong> <%= warranty.phoneNumber %><br>
+                        <strong>Model:</strong> <%= warranty.model %><br>
+                        <strong>Verified:</strong> <%= warranty.verify ? 'Yes' : 'No' %><br>
+                        <strong>Bill:</strong><a href="https://bitbox-vpp-devloper.onrender.com/<%= warranty.billPdf %>" target="_blank"><%= warranty.billPdf %></a><br>
+                        
+                        <% if (!warranty.verify) { %>
+                            <form action="https://bitbox-vpp-devloper.onrender.com/verify-warranty" method="POST">
+                                <input type="hidden" name="serialNumber" value="<%= warranty.serialNumber %>">
+                                <input type="hidden" name="email" value="<%= warranty.email %>">
+                                <input type="hidden" name="expiryDate" value="<%= warranty.expiryDate %>">
+                            
+                                <input type="number" name="duration" placeholder="Modify Duration" required>
+                                <p>Modify Purchase Date:</p>
+                                <input type="date" name="purchaseDate" placeholder="Modify purchaseDate" required>
+                                <button type="submit" class="verify-btn">Verify</button>
+                            </form>
+                        <% } %>
+                    </li>
+                <% }); %>
+            </ul>
+        </div>
+        
+
+        <div class="warranty-info">
+            <h2>Warranty Registration</h2>
+            <form action="https://bitbox-vpp-devloper.onrender.com/bulk-verify-warranty" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+                <label for="numComputers">Number of Computers:</label>
+                <input type="number" id="numComputers" name="numComputers" min="1" required onchange="addComputerFields()"><br><br>
+            
+                <label for="warrantyDuration">Expiry (In Years):</label>
+                <input type="text" id="expiryyear" name="expiryyear" required><br><br>
+            
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required><br><br>
+            
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required><br><br>
+            
+                <label for="purchaseDate">Purchase Date:</label>
+                <input type="date" id="purchaseDate" name="purchaseDate" required><br><br>
+            
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" required><br><br>
+            
+                <label for="city">City:</label>
+                <input type="text" id="city" name="city" required><br><br>
+            
+                <label for="pincode">Pincode:</label>
+                <input type="text" id="pincode" name="pincode" required><br><br>
+            
+                <label for="state">State:</label>
+                <input type="text" id="state" name="state" required><br><br>
+            
+                <label for="phoneNumber">Phone Number:</label>
+                <input type="text" id="phoneNumber" name="phoneNumber" required><br><br>
+            
+                <label for="billPdf">Upload Bill PDF:</label>
+                <input type="file" id="billPdf" name="billPdf" accept="application/pdf" required><br>
+            
+                <div id="computerFields"></div>
+            
+                <button type="submit" class="verify-btn">Register</button>
+            </form>
+            
+        </div>
+        
+       <script>
+        function addComputerFields() {
+    const numComputers = document.getElementById('numComputers').value;
+    const computerFieldsDiv = document.getElementById('computerFields');
+    computerFieldsDiv.innerHTML = '';
+
+    for (let i = 1; i <= numComputers; i++) {
+        const computerDiv = document.createElement('div');
+        computerDiv.classList.add('computer');
+
+        const heading = document.createElement('h3');
+        heading.textContent = `Computer ${i}`;
+
+        const serialNumberLabel = document.createElement('label');
+        serialNumberLabel.textContent = 'Serial Number:';
+        const serialNumberInput = document.createElement('input');
+        serialNumberInput.type = 'text';
+        serialNumberInput.name = `serialNumber${i}`;
+        serialNumberInput.id = `serialNumber${i}`;
+        serialNumberInput.required = true;
+
+        const checkSerialButton = document.createElement('button');
+        checkSerialButton.type = 'button';
+        checkSerialButton.textContent = 'Check Serial Number';
+        checkSerialButton.id = `checkSerialButton${i}`;
+        checkSerialButton.addEventListener('click', function() {
+            const serialNumber = serialNumberInput.value;
+            fetch('https://bitbox-vpp-devloper.onrender.com/serial-numbers/' + serialNumber)
+                .then(response => response.json())
+                .then(data => {
+                    const resultElement = document.getElementById(`serialCheckResult${i}`);
+                    if (data.valid) {
+                        resultElement.textContent = 'Serial number is valid.';
+                        resultElement.className = 'success-message';
+                    } else {
+                        resultElement.textContent = 'Serial number is invalid.';
+                        resultElement.className = 'error-message';
+                    }
+                })
+                .catch(error => console.error('Error checking serial number:', error));
+        });
+
+        const serialCheckResult = document.createElement('p');
+        serialCheckResult.id = `serialCheckResult${i}`;
+
+        const modelLabel = document.createElement('label');
+        modelLabel.textContent = 'Model:';
+        const modelInput = document.createElement('input');
+        modelInput.type = 'text';
+        modelInput.name = `model${i}`;
+        modelInput.required = true;
+
+        computerDiv.appendChild(heading);
+        computerDiv.appendChild(serialNumberLabel);
+        computerDiv.appendChild(serialNumberInput);
+        computerDiv.appendChild(checkSerialButton);
+        computerDiv.appendChild(serialCheckResult);
+        computerDiv.appendChild(document.createElement('br'));
+        computerDiv.appendChild(modelLabel);
+        computerDiv.appendChild(modelInput);
+        computerDiv.appendChild(document.createElement('br'));
+
+        computerFieldsDiv.appendChild(computerDiv);
+    }
+}
+
+       </script>
+        
+        
+    </div>
+
+    <div class="expiring-warranties">
+        <h2>Recently Expiring Warranties</h2>
+        <ul></ul>
+    </div>
+</body>
+</html>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+fetch('/expiring-warranties')
+    .then(response => response.json())
+    .then(data => {
+        const warrantiesList = document.querySelector('.expiring-warranties ul');
+        data.forEach(warranty => {
+            const listItem = document.createElement('li');
+            const { name, email, serialNumber, purchaseDate, expiryDate, address, city, pincode, state, phoneNumber, model } = warranty;
+            const formattedExpiryDate = new Date(expiryDate).toLocaleDateString(); // Format expiry date as needed
+
+            listItem.innerHTML = `
+                <p>Name: ${name}</p>
+                <p>Email: ${email}</p>
+                <p>Serial Number: ${serialNumber}</p>
+                <p>Purchase Date: ${new Date(purchaseDate).toLocaleDateString()}</p>
+                <p>Expiry Date: ${formattedExpiryDate}</p>
+                <p>Address: ${address}</p>
+                <p>City: ${city}</p>
+                <p>Pincode: ${pincode}</p>
+                <p>State: ${state}</p>
+                <p>Phone Number: ${phoneNumber}</p>
+                <p>Model: ${model}</p>
+                <button class="notify-button" data-email="${email}" data-serial="${serialNumber}" data-expiry="${expiryDate}">Notify</button>
+            `;
+            warrantiesList.appendChild(listItem);
+        });
+
+        // Add event listeners to Notify buttons
+        warrantiesList.addEventListener('click', (event) => {
+            if (event.target.classList.contains('notify-button')) {
+                const email = event.target.getAttribute('data-email');
+                const serialNumber = event.target.getAttribute('data-serial');
+                const expiryDate = event.target.getAttribute('data-expiry');
+                
+                // Encode parameters for URL
+                const encodedEmail = encodeURIComponent(email);
+                const encodedSerialNumber = encodeURIComponent(serialNumber);
+                const encodedExpiryDate = encodeURIComponent(expiryDate);
+
+                fetch(`/send-notification?email=${encodedEmail}&serialNumber=${encodedSerialNumber}&expiryDate=${encodedExpiryDate}`)
+                    .then(response => {
+                        if (response.ok) {
+                            alert('Notification email sent successfully.');
+                        } else {
+                            alert('Failed to send notification email.');
+                        }
+                    })
+                    .catch(error => console.error('Error sending notification:', error));
+            }
+        });
+    })
+    .catch(error => console.error('Error fetching expiring warranties:', error));
+});
+
+</script>
+
+
+<script>
+    function filterWarranties(status) {
+    const warrantyList = document.getElementById('warrantyList').getElementsByTagName('li');
+    for (let i = 0; i < warrantyList.length; i++) {
+        const warranty = warrantyList[i];
+        if (status === 'verified' && warranty.classList.contains('verified')) {
+            warranty.style.display = 'block';
+        } else if (status === 'unverified' && warranty.classList.contains('unverified')) {
+            warranty.style.display = 'block';
+        } else {
+            warranty.style.display = 'none';
+        }
+    }
+}
+
+</script>
+
+<script>
+    function validateForm() {
+        const phoneNumber = document.getElementById('phoneNumber').value;
+        const serialNumbers = document.querySelectorAll('input[id^="serialNumber"]');
+        const modelNumbers = document.querySelectorAll('input[id^="model"]');
+        let isValid = true;
+
+        // Phone Number Validation
+        if (!phoneNumber.startsWith('+91') || phoneNumber.length !== 13 || !(/^\+?\d+$/.test(phoneNumber.slice(1)))) {
+    alert('Phone Number must start with +91 and be 12 digits long.');
+    isValid = false;
+}
+
+        // Serial Number Validation
+        serialNumbers.forEach(serialNumber => {
+            if (serialNumber.value.length !== 10 || !/^[A-Z0-9]+$/.test(serialNumber.value)) {
+                alert('Serial Number must be 10 characters long and contain only uppercase letters and digits.');
+                isValid = false;
+            }
+        });
+
+        // Model Number Validation
+modelNumbers.forEach(modelNumber => {
+    const modelPattern = /^[A-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]*$/;
+    if (!modelPattern.test(modelNumber.value)) {
+        alert('Model number must follow the pattern contain only uppercase letters and digits.');
+        event.preventDefault(); // Add event parameter here
+        isValid = false;
+    }
+});
+
+
+        return isValid;
+    }
+</script>
