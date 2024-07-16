@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Information</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+
+        .loader {
+            border: 16px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 16px solid #ff6900;
+            width: 120px;
+            height: 120px;
+            animation: spin 2s linear infinite;
+            display: none; /* Hide the loader initially */
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .visible {
+            display: block;
+        }
+
+        #system-info, #waiting-message, #warranty-info, #driver-btn {
+            text-align: left;
+            margin-top: 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 10px 0;
+            background-color: #ff6900;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #e05d00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="../statics/BitBox_logo1.png" alt="Company Logo" width="100">
+        </header>
+        <h1>Detect This PC</h1>
+        <h1 id="incompatibleMessage" class="hidden">Device Not Compatible</h1>
+        <div id="system-info" class="hidden">
+            <p>Manufacturer: <span id="manufacturer"></span></p>
+            <p>Model: <span id="model"></span></p>
+            <p>Serial Number: <span id="serialNumber"></span></p>
+        </div>
+        <div id="waiting-message" class="visible">
+            <p>Waiting for retrieval...</p>
+        </div>
+        <div id="warranty-info" class="hidden">
+           <p>Warranty Status : <span id="expiryDate"></span></p>
+           <a href="http://support.bitboxpc.com/register-warranty"> <button id="registerWarrantyBtn" class="btn hidden">Register Warranty</button></a>
+        </div>
+        <div id="driver-btn" class="hidden">
+            <a href="http://support.bitboxpc.com/latest-driver?serial=" id="latestDriverLink" class="btn" download>Download Latest Driver</a>
+        </div>
+        <div id="loader" class="loader"></div>
+        <p id="fetching-info" class="hidden">Fetching system information, please wait...</p>
+
+        <h2>Download and Run the System Update Utility</h2>
+        <p>Please download and run the utility to fetch the system information. We ensure and abide to maintain the utmost privacy of your information shared:</p>
+        <div>
+            <a href="/scripts/bitbox_systemupdate.exe" class="btn" download>Are you using Windows</a>
+        </div>
+        <div>
+            <a href="/scripts/bitboxpc_systemupdate-linux" class="btn" download>Are you using Linux</a>
+        </div>
+        
+
+    <script>
+        let dataFetched = false;
+        let incompatibleShown = false;
+
+        const loader = document.getElementById('loader');
+        const fetchingInfo = document.getElementById('fetching-info');
+        const systemInfo = document.getElementById('system-info');
+        const waitingMessage = document.getElementById('waiting-message');
+        const warrantyInfo = document.getElementById('warranty-info');
+        const registerWarrantyBtn = document.getElementById('registerWarrantyBtn');
+        const driverBtn = document.getElementById('driver-btn');
+        const latestDriverLink = document.getElementById('latestDriverLink');
+        const incompatibleMessage = document.getElementById('incompatibleMessage');
+
+        const fetchIpAddress = async () => {
+        const randomNumber = localStorage.getItem('randomNumber');
+        console.log('Stored Random Number:', randomNumber);
+        return randomNumber;
+    };
+
+        const allFieldsFilled = (data) => {
+            return data.manufacturer && data.Model && data.Serial_Number;
+        };
+
+        const fetchSystemInfo = (ip) => {
+            fetch(`http://support.bitboxpc.com/fetch-system-info?ip=${ip}&timestamp=` + new Date().getTime())
+                .then(response => response.json())
+                .then(data => {
+                 
+                    if (allFieldsFilled(data)) {
+                      
+                        if (data.manufacturer == "PATA ELECTRIC COMPANY") {
+                            loader.style.display = 'none';
+                            fetchingInfo.classList.remove('visible');
+                            fetchingInfo.classList.add('hidden');
+
+                            systemInfo.classList.remove('hidden');
+                            waitingMessage.classList.remove('visible');
+                            waitingMessage.classList.add('hidden');
+                            document.getElementById('manufacturer').textContent = data.manufacturer;
+                            document.getElementById('model').textContent = data.Model;
+                            document.getElementById('serialNumber').textContent = data.Serial_Number;
+
+                            fetch(`http://support.bitboxpc.com/check-warranty?serial=${data.Serial_Number}`)
+                                .then(response => response.json())
+                                .then(warrantyData => {
+                                
+                                    if (warrantyData.status === 'registered') {
+                                        const expiryDate = new Date(warrantyData.expiryDate);
+
+                                        // Format the date to show only the day and date
+                                        const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+                                        const formattedDate = expiryDate.toLocaleDateString('en-US', options);
+                                        document.getElementById('expiryDate').textContent = 'Registered';
+                                    } else {
+                                        document.getElementById('expiryDate').textContent = 'Not Registered';
+                                        registerWarrantyBtn.classList.remove('hidden');
+                                    }
+                                    warrantyInfo.classList.remove('hidden');
+                                    latestDriverLink.href += data.Model;
+                                    driverBtn.classList.remove('hidden');
+
+                                    // Set the flag to indicate data has been fetched
+                                    dataFetched = true;
+                                })
+                                .catch(error => console.error('Error fetching warranty info:', error));
+                        } else {
+                            loader.style.display = 'none';
+                            fetchingInfo.classList.remove('visible');
+                            fetchingInfo.classList.add('hidden');
+                            waitingMessage.classList.remove('visible');
+                            waitingMessage.classList.add('hidden');
+                            incompatibleMessage.textContent = 'You are not using a BitBox product, please run this on a relevant hardware only';
+                            incompatibleMessage.classList.remove('hidden');
+                            incompatibleMessage.classList.add('visible');
+                            incompatibleShown = true;
+                            dataFetched = true;
+                        }
+                    } else {
+                        incompatibleMessage.classList.remove('visible');
+                        incompatibleMessage.classList.add('hidden');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching system info:', error);
+                    // Retry fetching system info after a delay if data has not been fetched yet and incompatible message is not shown
+                    if (!dataFetched && !incompatibleShown) {
+                        setTimeout(() => fetchSystemInfo(ip), 2000);
+                    }
+                });
+        };
+
+        const refreshCheckDevice = () => {
+            setInterval(() => {
+                if (!dataFetched && !incompatibleShown) {
+                    loader.style.display = 'block';
+                    fetchingInfo.classList.remove('hidden');
+                    fetchingInfo.classList.add('visible');
+
+                    fetchIpAddress().then(ip => {
+                        if (ip) {
+                            fetchSystemInfo(ip);
+                        } else {
+                            console.error('Could not fetch IP address');
+                            loader.style.display = 'none';
+                            fetchingInfo.classList.remove('visible');
+                            fetchingInfo.classList.add('hidden');
+                        }
+                    });
+                }
+            }, 5000);
+        };
+
+        // Call the function to start auto-refreshing
+        refreshCheckDevice();
+    </script>
+</body>
+</html>

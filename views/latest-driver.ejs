@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Download Latest Driver</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #ff6900;
+            margin-bottom: 20px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        li p {
+            margin: 5px 0;
+        }
+
+        li a {
+            color: #ff6900;
+            text-decoration: none;
+        }
+
+        li a:hover {
+            text-decoration: underline;
+        }
+
+        a.back-link {
+            display: block;
+            margin-top: 20px;
+            color: #ff6900;
+            text-decoration: none;
+        }
+
+        a.back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Download Latest Driver</h1>
+    <% if (driver) { %>
+        <ul>
+            <li>
+                <p>Model: <%= driver.model %></p>
+                <p>Version: <%= driver.version %></p>
+                <p>Release Date: <%= driver.date.toDateString() %></p>
+                <% 
+                    let fullDownloadLink = driver.downloadLink;
+                    if (!fullDownloadLink.startsWith('http://') && !fullDownloadLink.startsWith('https://')) {
+                        fullDownloadLink = 'http://support.bitboxpc.com' + fullDownloadLink;
+                    }
+                %>
+                <p>Download Link: <a href="http://support.bitboxpc.com<%= driver.downloadLink %>" download>Download</a></p>
+            </li>
+        </ul>
+    <% } else { %>
+        <p>No drivers found for this device.</p>
+    <% } %>
+    <a href="/" class="back-link">Back to Home</a>
+</body>
+</html>

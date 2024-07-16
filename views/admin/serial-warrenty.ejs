@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check Warranty</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f0f0f0;
+            width: 100%;
+        }
+
+        .navbar {
+            width: 100%;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            margin-bottom: 20px; /* Add margin at the bottom */
+        }
+
+        .container {
+            width: 70%; /* Set the width of the container */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input-field {
+            width: 205%; /* Set the input field width to 100% */
+            padding: 10px;
+            margin-left: -50%;
+            font-size: 1.5em;
+            border: 2px solid orange;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-sizing: border-box; /* Include padding and border in the element's total width and height */
+        }
+
+        .search-button {
+            width: 100%; /* Set the button width to 100% */
+            background-color: orange;
+            color: white;
+            border: none;
+            padding: 10px 0; /* Remove horizontal padding */
+            font-size: 1.5em;
+            border-radius: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center; /* Center the button content */
+        }
+
+        .search-button:hover {
+            background-color: darkorange;
+        }
+
+        .green-button {
+            width: 100%; /* Set the button width to 100% */
+            background-color: orange;
+            color: white;
+            border: none;
+            padding: 10px 0; /* Remove horizontal padding */
+            font-size: 1.5em;
+            border-radius: 5px;
+            text-decoration: none;
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .green-button:hover {
+            background-color: darkorange;
+        }
+
+        p {
+            margin-top: -1%;
+        }
+
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgb(0,0,0); 
+            background-color: rgba(0,0,0,0.4); 
+            padding-top: 60px; 
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto; 
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; 
+            max-width: 500px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .send-otp-button, .verify-otp-button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+
+        .send-otp-button:hover, .verify-otp-button:hover {
+            background-color: orange;
+        }
+
+        #otp, #certificate-link {
+            margin: 10px 0;
+        }
+
+
+
+        .green-button:hover {
+            background-color: orange;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>Check Your Device Warranty </h1>
+    </div>
+
+    <div class="container">
+        <form action="/check-warranty2" method="GET">
+            <input type="text" class="input-field" name="serial" id="serial" pattern="[A-Za-z0-9]{10}" placeholder="Enter your Serial Number without any Special Character" value="<%= typeof serialNumber !== 'undefined' ? serialNumber : '' %>" required>
+            <button type="submit" class="search-button">
+                Check Your Warranty 
+                <span class="search-icon">🔍</span>
+            </button>
+        </form>
+        <br>
+        <% if (typeof expiryDate !== 'undefined') { %>
+            <% if (status === 'registered') { %>
+                <div class="result"> <h1 style="color: green;">Expiry Date: <%= new Date(expiryDate).toDateString() %></h1></div>
+                <button type="button" onclick="sendOTP()" class="otp-button" style="padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">Download Warranty Certificate</button>
+                <input type="number" id="otp" placeholder="Enter OTP" style="padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; font-size: 16px;">
+                <button onclick="verifyOtp()" style="padding: 10px 20px; background-color: #008CBA; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px;">Verify OTP</button>
+                <div id="certificate-link" style="display: none; margin-top: 20px;">
+                    <h2>Certificate Link: <a href="#" id="cert-link" target="_blank" style="color: #4CAF50; text-decoration: none;">Download Certificate</a></h2>
+                </div>
+            <% } else if (status === 'not_registered') { %>
+                <div class="result1"> <h1 style="color: red;">Warranty not registered</h1></div>
+            <% } %>
+            <% } %>
+    
+        <a href="http://support.bitboxpc.com/register-warranty" class="green-button">Register Warranty</a>
+   
+        <p style="margin-top:10px;">If you Know Serial Number & Model - You may register your warranty here</p>
+
+        <a href="http://support.bitboxpc.com/check-device" class="green-button">Check Your Device Info</a>
+        
+        <p style="margin-top:10px;"> To Know your device  Serial Number, Model Number, Warranty Info click here</p>
+
+        <button class="green-button" onclick="openModal()">Download The Certificate</button>
+
+        <p style="margin-top:10px;"> Check your Warrenty</p>
+    </div>
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Download Warranty Certificate</h2>
+            <input type="text" id="serialInput" placeholder="Enter Serial Number">
+            <button class="send-otp-button" onclick="sendOTP()">Send OTP</button>
+            <input type="text" id="otp2" placeholder="Enter OTP" style="display: none;">
+            <button class="verify-otp-button" onclick="verifyOtp()" style="display: none;">Verify OTP</button>
+            <div id="certificate-link" style="display: none;">
+                <h3>Certificate Link: <a href="#" id="cert-link" target="_blank">Download Certificate</a></h3>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<script>
+    // Modal handling
+    var modal = document.getElementById("myModal");
+    var span = document.getElementsByClassName("close")[0];
+
+    function openModal() {
+        modal.style.display = "block";
+    }
+
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+
+    async function sendOTP() {
+        const serial = document.getElementById('serialInput').value || document.getElementById('serial').value;
+        try {
+            const response = await fetch('/send-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ serial }),
+            });
+            const data = await response.json();
+            alert(data.message + "  On  " + data.maskedEmail);
+
+            document.getElementById('otp').style.display = 'block';
+            document.querySelector('.verify-otp-button').style.display = 'block';
+        } catch (error) {
+            console.error('Error:', error);
+            alert('Failed to send OTP.');
+        }
+    }
+
+    async function verifyOtp() {
+        const serial = document.getElementById('serialInput').value || document.getElementById('serial').value;
+        const otp = document.getElementById('otp').value || document.getElementById('otp2').value;
+
+        try {
+            const response = await fetch('/verify-otp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ serial, otp }),
+            });
+            const data = await response.json();
+            if (data.message === 'OTP verified successfully') {
+                document.getElementById('certificate-link').style.display = 'block';
+                document.getElementById('cert-link').href = data.certificateLink;
+                alert("Your OTP has Verified Sucessfully");
+            } else {
+                alert("Your OTP has Not Verified ");
+            }
+        } catch (error) {
+            console.error('Error verifying OTP:', error);
+            alert('Failed to verify OTP.');
+        }
+    }
+</script>

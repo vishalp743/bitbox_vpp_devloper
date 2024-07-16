@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        .container {
+            width: 80%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #ff6900;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background: #fff3e6;
+            margin: 10px 0;
+            padding: 15px;
+            border: 1px solid #ffcc99;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        li form {
+            display: inline;
+        }
+
+        button, input[type="submit"] {
+            background-color: #ff6900;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-left: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover, input[type="submit"]:hover {
+            background-color: #e05d00;
+        }
+
+        a {
+            display: inline-block;
+            text-align: center;
+            background-color: #ff6900;
+            color: white;
+            padding: 10px 20px;
+            margin: 20px 0;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        a:hover {
+            background-color: #e05d00;
+        }
+
+        .warranty-info, .serial-info {
+            margin-top: 40px;
+        }
+
+        .warranty-info strong, .serial-info strong {
+            display: inline-block;
+            width: 150px;
+        }
+
+        /* Warranty Registration Section Styling */
+        .warranty-info form {
+            background-color: #fff3e6;
+            padding: 20px;
+            border-radius: 5px;
+            border: 1px solid #ffcc99;
+            margin-top: 20px;
+        }
+
+        .warranty-info label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .warranty-info input,
+        .warranty-info select {
+            width: calc(100% - 10px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        .warranty-info button {
+            background-color: #ff6900;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .warranty-info button:hover {
+            background-color: #e05d00;
+        }
+
+        .add-btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .delete-btn {
+            background-color: #ff0000;
+        }
+
+        .delete-btn:hover {
+            background-color: #cc0000;
+        }
+    </style>
+</head>
+<div class="serial-info">
+    <h2>All Serial Numbers</h2>
+    <ul>
+        <% serials.forEach(serial => { %>
+            <li>
+                <div>
+                    <strong>Serial Number:</strong> <%= serial.serialNumber %><br>
+                    <strong>Model Number:</strong> <%= serial.modelNumber %><br>
+                    <strong>Tested By:</strong> <%= serial.testedBy %><br>
+                    <strong>Uploaded File:</strong> <a href="/uploads/<%= serial.uploadedFile %>" target="_blank"><%= serial.uploadedFile %></a><br>
+                    <h2 style="color: #e65c00;text-align: left;">Machine Specification :- </h2> 
+                    <strong>Processor:</strong> <%= serial.processor %><br>
+                    <strong>Motherboard:</strong> <%= serial.motherboard %><br>
+                    <strong>RAM:</strong> <%= serial.ram %><br>
+                    <strong>SSD:</strong> <%= serial.ssd %><br>
+                    <strong>HDD:</strong> <%= serial.hdd %><br>
+                    <strong>Monitor Size:</strong> <%= serial.monitorSize %>
+                </div>
+                <form action="http://support.bitboxpc.com/delete-serial" method="POST" style="display:inline;">
+                    <input type="hidden" name="serialNumber" value="<%= serial.serialNumber %>">
+                    <input type="hidden" name="modelNumber" value="<%= serial.modelNumber %>">
+                    <!-- <button type="submit" class="delete-btn">Delete</button> -->
+                </form>
+            </li>
+        <% }); %>
+    </ul>
+    <form action="http://support.bitboxpc.com/add-serial" method="POST" enctype="multipart/form-data">
+        <input type="text" name="serialNumber" placeholder="Enter Serial Number" pattern="[A-Z0-9]{10}" required>
+        <input type="text" name="modelNumber" placeholder="Enter Model Number" oninput="this.value = this.value.toUpperCase()" required>
+        <input type="text" name="testedBy" placeholder="Tested By" required>
+        <br><br>
+        <small>Upload Test Report</small>
+        <input type="file" name="file" accept=".pdf,.exe" required>
+        <br><br>
+        
+        <input type="text" name="processor" placeholder="Processor" required>
+        <input type="text" name="motherboard" placeholder="Motherboard" required>
+        <input type="text" name="ram" placeholder="RAM" required>
+        <input type="text" name="ssd" placeholder="SSD" required>
+        <input type="text" name="hdd" placeholder="HDD" required>
+        <input type="text" name="monitorSize" placeholder="Monitor Size" required>
+        <button type="submit" class="add-btn">Add Serial Number</button>
+    </form>
+</div>
+
+
+</html>
