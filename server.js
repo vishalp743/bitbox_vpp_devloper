@@ -560,6 +560,7 @@ app.post('/verify-warranty', async (req, res) => {
         expiryDateObj.setHours(0, 0, 0, 0);
 
         const expiryDate = new Date(expiryDateObj).toDateString();
+        const purchase_date = new Date(purchaseDate).toDateString();
 
         // Find and update the warranty information
         const warranty = await Warranty.findOneAndUpdate(
@@ -686,7 +687,7 @@ app.post('/verify-warranty', async (req, res) => {
                     <span>■ Product Serial Number:</span> ${serialNumber}
                 </div>
                 <div>
-                    <span>■ Date of Purchase:</span> ${purchaseDate}
+                    <span>■ Date of Purchase:</span> ${purchase_date}
                 </div>
                 <div>
                     <span>■ Purchaser's Name:</span> ${name}
@@ -809,6 +810,7 @@ app.post('/bulk-verify-warranty2', async (req, res) => {
         expiryDateObj.setHours(0, 0, 0, 0);
 
         const expiryDate = new Date(expiryDateObj).toDateString();
+        const purchase_date = new Date(purchaseDate).toDateString();
 
         // Find and update the warranty information
         const warranty = await Warranty.updateMany(
@@ -963,7 +965,7 @@ app.post('/bulk-verify-warranty2', async (req, res) => {
                 <tr>
                     <td>${entry.model}</td>
                     <td>${entry.serialNumber}</td>
-                    <td>${entry.purchaseDate}</td>
+                    <td>${purchase_date}</td>
                     <td>${entry.name}</td>
                     <td>${entry.purchaseDetails}</td>
                     <td>${duration} Years</td>
