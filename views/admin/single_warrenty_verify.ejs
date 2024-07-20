@@ -157,10 +157,10 @@
                 <strong>Verified:</strong> <%= warranty.verify ? 'Yes' : 'No' %><br>
                 <strong>Vendor:</strong> <%= warranty.purchaseDetails %><br>
                 <strong>Warranty Type:</strong> <%= warranty.warrantyType %><br>
-                <strong>Bill:</strong><a href="http://support.bitboxpc.com/<%= warranty.billPdf %>" target="_blank"><%= warranty.billPdf %></a><br>
+                <strong>Bill:</strong><a href="http://localhost:5000/<%= warranty.billPdf %>" target="_blank"><%= warranty.billPdf %></a><br>
                 
                 <% if (!warranty.verify) { %>
-                    <form action="http://support.bitboxpc.com/verify-warranty" method="POST">
+                    <form action="http://localhost:5000/verify-warranty" method="POST">
                         <input type="hidden" name="serialNumber" value="<%= warranty.serialNumber %>">
                         <input type="hidden" name="email" value="<%= warranty.email %>">
                         <input type="hidden" name="expiryDate" value="<%= warranty.expiryDate %>">

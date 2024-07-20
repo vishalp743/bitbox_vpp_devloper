@@ -3,141 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Bulk Warranty Verify</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #ffffff;
-            color: #333;
-        }
-
-        .container {
-            width: 80%;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        h1, h2 {
-            text-align: center;
-            color: #ff6600;
-        }
-
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        li {
-            background: #fff5e6;
-            margin: 10px 0;
-            padding: 15px;
-            border: 1px solid #ffcc99;
-            border-radius: 5px;
-        }
-
-        li form {
-            display: inline;
-        }
-
-        button, input[type="submit"] {
-            background-color: #ff6600;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            margin-left: 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        button:hover, input[type="submit"]:hover {
-            background-color: #e65c00;
-        }
-
-        a {
-            display: inline-block;
-            text-align: center;
-            background-color: #ff6600;
-            color: white;
-            padding: 10px 20px;
-            margin: 20px 0;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        a:hover {
-            background-color: #e65c00;
-        }
-
-        .warranty-info, .serial-info {
-            margin-top: 40px;
-        }
-
-        .warranty-info strong, .serial-info strong {
-            display: inline-block;
-            width: 150px;
-        }
-
-        .warranty-info form {
-            background-color: #fff5e6;
-            padding: 20px;
-            border-radius: 5px;
-            border: 1px solid #ffcc99;
-            margin-top: 20px;
-        }
-
-        .warranty-info label {
-            display: block;
-            margin-bottom: 5px;
-            color: #ff6600;
-        }
-
-        .warranty-info input,
-        .warranty-info select {
-            width: calc(100% - 20px);
-            padding: 10px;
-            margin-bottom: 10px;
-            border: 1px solid #ffcc99;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-
-        .warranty-info button {
-            background-color: #ff6600;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            margin-top: 10px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-
-        .warranty-info button:hover {
-            background-color: #e65c00;
-        }
-
-        .computer {
-            background-color: #fff5e6;
-            padding: 10px;
-            border-radius: 5px;
-            margin-bottom: 10px;
-            border: 1px solid #ffcc99;
-        }
-
-        .computer h3 {
-            color: #ff6600;
-        }
-
-        .computer label {
-            color: #ff6600;
-        }
-    </style>
+   
 </head>
 <body>
     <div class="warranty-info">
@@ -159,7 +25,7 @@
                     <strong>Pincode:</strong> <%= group.commonFields.pincode %><br>
                     <strong>State:</strong> <%= group.commonFields.state %><br>
                     <strong>Phone Number:</strong> <%= group.commonFields.phoneNumber %><br>
-                    <strong>Bill:</strong> <a href="http://support.bitboxpc.com/<%= group.commonFields.billPdf %>" target="_blank"><%= group.commonFields.billPdf %></a><br>
+                    <strong>Bill:</strong> <a href="http://localhost:5000/<%= group.commonFields.billPdf %>" target="_blank"><%= group.commonFields.billPdf %></a><br>
                     <strong>Verified:</strong> <%= group.commonFields.verify ? 'Yes' : 'No' %><br>
                     <strong>Vendor:</strong> <%= group.commonFields.purchaseDetails %><br>
                     <strong>Warranty Type:</strong> <%= group.commonFields.warrantyType %><br>
@@ -173,7 +39,7 @@
                     </ul>
 
                     <% if (!group.commonFields.verify) { %>
-                        <form action="http://support.bitboxpc.com/bulk-verify-warranty2" method="POST">
+                        <form action="http://localhost:5000/bulk-verify-warranty2" method="POST">
                             <input type="hidden" name="batch" value="<%=  group.commonFields.batch %>">
                             <input type="hidden" name="email" value="<%= group.commonFields.email %>">
                             <input type="hidden" name="name" value="<%= group.commonFields.name %>">

@@ -147,14 +147,14 @@
         
 
         <div style="align-items: center;text-align: center;justify-content: center;">
-            <button><a href="http://support.bitboxpc.com/single_warrenty_verify">Single Warranty Verification</a></button>
-            <button><a href="http://support.bitboxpc.com/bulk_warrenty_verify">Bulk Warranty Verification</a></button>
+            <button><a href="http://localhost:5000/single_warrenty_verify">Single Warranty Verification</a></button>
+            <button><a href="http://localhost:5000/bulk_warrenty_verify">Bulk Warranty Verification</a></button>
             </div>
         
 
             <div class="warranty-info">
                 <h2>Warranty Registration</h2>
-                <form action="http://support.bitboxpc.com/bulk-verify-warranty" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+                <form action="http://localhost:5000/bulk-verify-warranty" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
                     <label for="numComputers">Number of Computers:</label>
                     <input type="number" id="numComputers" name="numComputers" min="1" required onchange="addComputerFields()"><br><br>
     
@@ -239,7 +239,7 @@
                         checkSerialButton.id = `checkSerialButton${i}`;
                         checkSerialButton.addEventListener('click', function() {
                             const serialNumber = serialNumberInput.value;
-                            fetch('http://support.bitboxpc.com/serial-numbers/' + serialNumber)
+                            fetch('http://localhost:5000/serial-numbers/' + serialNumber)
                                 .then(response => response.json())
                                 .then(data => {
                                     const resultElement = document.getElementById(`serialCheckResult${i}`);
@@ -301,7 +301,7 @@
                         resellerSelect.name = 'reseller';
         
                         // Fetch reseller options from the server
-                        fetch('http://support.bitboxpc.com/resellers')
+                        fetch('http://localhost:5000/resellers')
                             .then(response => response.json())
                             .then(data => {
                                 data.resellers.forEach(reseller => {
@@ -405,7 +405,7 @@
             const resellerName = document.getElementById('resellerName').value;
             const resellerEmail = document.getElementById('resellerEmail').value;
 
-            fetch('http://support.bitboxpc.com/add-reseller', {
+            fetch('http://localhost:5000/add-reseller', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

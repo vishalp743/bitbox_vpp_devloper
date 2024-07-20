@@ -13,6 +13,7 @@ const Warranty = require('./models/Warranty');
 const SystemInfo = require('./models/SystemInfo'); 
 const Certificate = require('./models/Certificate'); 
 const Reseller = require('./models/Reseller'); 
+const WarrantyClaim = require('./models/WarrantyClaim');
 const os = require('os');
 const app = express();
 const port = 5000;
@@ -50,8 +51,8 @@ const transporter = nodemailer.createTransport({
 });
 
 //DatabaseURL
-//const dbURI = 'mongodb+srv://vp0072003:Starwar007@blog.euwyrii.mongodb.net/bitbox?retryWrites=true&w=majority';
-const dbURI = 'mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.10';
+const dbURI = 'mongodb+srv://Bitbox-admin:Bitbox-admin@cluster0.gpzogeq.mongodb.net/Bitbox-admin?retryWrites=true&w=majority&appName=Cluster0';
+//const dbURI = 'mongodb://127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+2.2.10';
 
 //MongoDB Connecction with URL
 mongoose.connect(dbURI)
@@ -90,6 +91,77 @@ app.get('/get_local_ip', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+app.get('/claim-warranty', async (req, res) => {
+    try {
+      res.render('claim-warranty');
+       
+    } catch (error) {
+        console.error('Error getting IP address:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
+app.post('/claim-warranty', async (req, res) => {
+    try {
+        const { certificateId, phoneNumber, emailId, serialNumber,query } = req.body;
+        const warrantyClaim = new WarrantyClaim({
+            certificateId,
+            phoneNumber,
+            emailId,
+            serialNumber,
+            message:query,
+            status: 'submitted'
+        });
+
+        await warrantyClaim.save();
+
+        async function sendMail() {
+            const info = await transporter.sendMail({
+                from: '"Bitbox Alerts" <alerts@bitboxpc.com>',
+                to: `"Recipient" <${emailId}>`,
+                subject: "Warranty Claim Submitted",
+                text: `Dear Bitbox PC User,
+                `,
+                html: `<b>Dear Bitbox PC User, <br>Your Warranty Claim for Serail Number ${serialNumber} With Refrence To Certificate ID ${certificateId} <br> Submitted Sucessfully, We'll Convey You Further Updates on Your Mail</b></br>
+
+                <br><br>If you have any questions about your warranty coverage or need further assistance, please feel free to contact our customer support team at support@bitboxpc.com<br><br>
+                Regards,<br>
+                Team Bitbox
+                <br><br>
+                Toll Free: 1800309PATA <br>
+                eMail: <a href="mailto:support@bitboxpc.com">support@bitboxpc.com</a> <br>
+                web: <a href="http://www.bitboxpc.com">www.bitboxpc.com</a> <br><br>
+                <img src='https://www.bitboxpc.com/wp-content/uploads/2024/04/BitBox_logo1.png' height="60" width="140">`,
+                
+            });
+
+
+        }
+        await sendMail();
+
+
+        res.status(201).send({ message: 'Warranty claim submitted successfully' });
+    } catch (error) {
+        res.status(500).send({ message: 'Error submitting warranty claim', error });
+    }
+});
+
+app.get('/warrantyClaim/status/:certificateId', async (req, res) => {
+    try {
+        const { certificateId } = req.params;
+        const warrantyClaim = await WarrantyClaim.findOne({ certificateId });
+
+        if (warrantyClaim) {
+            res.status(200).send({ status: warrantyClaim.status });
+        } else {
+            res.status(404).send({ message: 'Certificate ID not found' });
+        }
+    } catch (error) {
+        res.status(500).send({ message: 'Error checking status', error });
+    }
+});
+
 
 // Device Check Route
 app.get('/check-device', async (req, res) => {
@@ -442,9 +514,9 @@ function isAuthenticated(req, res, next) {
 
 
 // Admin Routes
-app.get('/admin', (req, res) => {
-    res.render('admin/login');
-});
+// app.get('/admin', (req, res) => {
+//     res.render('admin/login');
+// });
 
 
 
@@ -561,11 +633,17 @@ app.post('/verify-warranty', async (req, res) => {
 
         const expiryDate = new Date(expiryDateObj).toDateString();
         const purchase_date = new Date(purchaseDate).toDateString();
+        let certificateID = Math.floor(1000000000 + Math.random() * 9000000000).toString();
 
         // Find and update the warranty information
         const warranty = await Warranty.findOneAndUpdate(
             { serialNumber: serialNumber },
-            { verify: true, purchaseDate: new Date(purchaseDate), expiryDate: expiryDateObj },
+            {
+                verify: true,
+                purchaseDate: new Date(purchaseDate),
+                expiryDate: expiryDateObj,
+                certificateID: certificateID // Add the certificate ID here
+            },
             { new: true }
         );
 
@@ -584,6 +662,7 @@ app.post('/verify-warranty', async (req, res) => {
         };
         
         const warrantyImageSrc = getWarrantyImage(duration);
+        
 
 
         const pdfContent = `
@@ -701,6 +780,9 @@ app.post('/verify-warranty', async (req, res) => {
                 <div>
                     <span>■ Warranty Expiry:</span> ${expiryDate}
                 </div>
+                <div>
+                    <span>■ Certificate ID:</span> ${certificateID}
+                </div>
             </div>
         </div>
 
@@ -761,8 +843,9 @@ app.post('/verify-warranty', async (req, res) => {
                     <b>Details: <br>
                     Warranty Period: ${duration} Years <br>
                     Warranty Expiry: ${expiryDateObj.toDateString()} <br>
+                    Certificate ID : ${certificateID} <br>
                     <h2>Coverage Details: ${warrantyType} </h2>
-                    </b>
+                    </br>
 
                     <br><br>If you have any questions about your warranty coverage or need further assistance, please feel free to contact our customer support team at support@bitboxpc.com<br><br>
                     Regards,<br>
@@ -805,6 +888,7 @@ app.post('/bulk-verify-warranty2', async (req, res) => {
         const purchaseDateObj = new Date(purchaseDate);
         const expiryDateObj = new Date(purchaseDateObj);
         expiryDateObj.setDate(expiryDateObj.getDate() + (365 * parseInt(duration)) - 1);
+        let certificateID = Math.floor(1000000000 + Math.random() * 9000000000).toString();
 
         // Ensure the expiry date has the correct format and zero time
         expiryDateObj.setHours(0, 0, 0, 0);
@@ -815,7 +899,12 @@ app.post('/bulk-verify-warranty2', async (req, res) => {
         // Find and update the warranty information
         const warranty = await Warranty.updateMany(
             { batch: batch },
-            { verify: true, purchaseDate: new Date(purchaseDate), expiryDate: expiryDateObj },
+            {
+                verify: true,
+                purchaseDate: new Date(purchaseDate),
+                expiryDate: expiryDateObj,
+                certificateID: certificateID // Add the certificate ID here
+            },
             { new: true }
         );
 
@@ -976,6 +1065,8 @@ app.post('/bulk-verify-warranty2', async (req, res) => {
                     </table>
                 </div>
             </div>
+
+            <h1>Certificate ID : ${certificateID}</h1>
         
        
            
@@ -1048,8 +1139,9 @@ app.post('/bulk-verify-warranty2', async (req, res) => {
                     <b>Details: <br>
                     Warranty Period: ${duration} Years <br>
                     Warranty Expiry: ${expiryDateObj.toDateString()} <br>
+                    Certificate ID: ${certificateID} <br>
                     <h2>Coverage Details: ${warrantyType} </h2>
-                    </b>
+                    </br>
 
                     <br><br>If you have any questions about your warranty coverage or need further assistance, please feel free to contact our customer support team at support@bitboxpc.com<br><br>
                     Regards,<br>

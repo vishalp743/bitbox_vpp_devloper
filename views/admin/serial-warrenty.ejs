@@ -176,17 +176,20 @@
             <% } %>
             <% } %>
     
-        <a href="http://support.bitboxpc.com/register-warranty" class="green-button">Register Warranty</a>
+        <a href="http://localhost:5000/register-warranty" class="green-button">Register Warranty</a>
    
         <p style="margin-top:10px;">If you Know Serial Number & Model - You may register your warranty here</p>
 
-        <a href="http://support.bitboxpc.com/check-device" class="green-button">Check Your Device Info</a>
+        <a href="http://localhost:5000/check-device" class="green-button">Check Your Device Info</a>
         
         <p style="margin-top:10px;"> To Know your device  Serial Number, Model Number, Warranty Info click here</p>
 
-        <button class="green-button" onclick="openModal()">Download The Certificate</button>
+        <button class="green-button" onclick="openModal()">Download Your Warranty Certificate</button>
 
         <p style="margin-top:10px;"> Check your Warrenty</p>
+
+        <a href="http://localhost:5000/claim-warranty" class="green-button">Claim Your Warranty</a>
+
     </div>
 
     <div id="myModal" class="modal">
@@ -240,8 +243,8 @@
             document.getElementById('otp').style.display = 'block';
             document.querySelector('.verify-otp-button').style.display = 'block';
         } catch (error) {
-            console.error('Error:', error);
-            alert('Failed to send OTP.');
+            document.getElementById('otp').style.display = 'block';
+            document.querySelector('.verify-otp-button').style.display = 'block';
         }
     }
 

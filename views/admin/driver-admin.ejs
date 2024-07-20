@@ -149,13 +149,13 @@
             <% drivers.forEach(driver => { %>
                 <li>
                     <%= driver.version %> - <%= driver.model %> -  <%= new Date(driver.date).toDateString() %>
-                    <form action="http://support.bitboxpc.com/admin/drivers/delete/<%= driver._id %>" method="POST">
+                    <form action="http://localhost:5000/admin/drivers/delete/<%= driver._id %>" method="POST">
                     
                     </form>
                 </li>
             <% }); %>
         </ul>
-        <a href="http://support.bitboxpc.com/admin/drivers/upload">Upload New Driver</a>
+        <a href="http://localhost:5000/admin/drivers/upload">Upload New Driver</a>
 
     </div>
 </body>

@@ -95,10 +95,10 @@
         </div>
         <div id="warranty-info" class="hidden">
            <p>Warranty Status : <span id="expiryDate"></span></p>
-           <a href="http://support.bitboxpc.com/register-warranty"> <button id="registerWarrantyBtn" class="btn hidden">Register Warranty</button></a>
+           <a href="http://localhost:5000/register-warranty"> <button id="registerWarrantyBtn" class="btn hidden">Register Warranty</button></a>
         </div>
         <div id="driver-btn" class="hidden">
-            <a href="http://support.bitboxpc.com/latest-driver?serial=" id="latestDriverLink" class="btn" download>Download Latest Driver</a>
+            <a href="http://localhost:5000/latest-driver?serial=" id="latestDriverLink" class="btn" download>Download Latest Driver</a>
         </div>
         <div id="loader" class="loader"></div>
         <p id="fetching-info" class="hidden">Fetching system information, please wait...</p>
@@ -138,7 +138,7 @@
         };
 
         const fetchSystemInfo = (ip) => {
-            fetch(`http://support.bitboxpc.com/fetch-system-info?ip=${ip}&timestamp=` + new Date().getTime())
+            fetch(`http://localhost:5000/fetch-system-info?ip=${ip}&timestamp=` + new Date().getTime())
                 .then(response => response.json())
                 .then(data => {
                  
@@ -156,7 +156,7 @@
                             document.getElementById('model').textContent = data.Model;
                             document.getElementById('serialNumber').textContent = data.Serial_Number;
 
-                            fetch(`http://support.bitboxpc.com/check-warranty?serial=${data.Serial_Number}`)
+                            fetch(`http://localhost:5000/check-warranty?serial=${data.Serial_Number}`)
                                 .then(response => response.json())
                                 .then(warrantyData => {
                                 

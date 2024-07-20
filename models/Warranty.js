@@ -17,6 +17,7 @@ const warrantySchema = new mongoose.Schema({
     batch: { type: String, default: null },
     purchaseDetails: String,
     warrantyType: String,
+    certificateID: String,
 });
 
 const Warranty = mongoose.model('Warranty', warrantySchema);

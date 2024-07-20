@@ -67,10 +67,10 @@
                 <% 
                     let fullDownloadLink = driver.downloadLink;
                     if (!fullDownloadLink.startsWith('http://') && !fullDownloadLink.startsWith('https://')) {
-                        fullDownloadLink = 'http://support.bitboxpc.com' + fullDownloadLink;
+                        fullDownloadLink = 'http://localhost:5000' + fullDownloadLink;
                     }
                 %>
-                <p>Download Link: <a href="http://support.bitboxpc.com<%= driver.downloadLink %>" download>Download</a></p>
+                <p>Download Link: <a href="http://localhost:5000<%= driver.downloadLink %>" download>Download</a></p>
             </li>
         </ul>
     <% } else { %>
