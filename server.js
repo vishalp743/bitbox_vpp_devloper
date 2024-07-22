@@ -114,6 +114,15 @@ app.post('/claim-warranty', async (req, res) => {
             status: 'submitted'
         });
 
+        const exists = await Certificate.exists(serialNumber);
+
+        if(!exists)
+        {
+            res.status(500).send({ message: 'Serail Number not exist', error });
+        }
+
+
+
         await warrantyClaim.save();
 
         async function sendMail() {

@@ -52,14 +52,7 @@
             width: 100%;
         }
 
-        .navbar {
-            width: 100%;
-            background-color: #333;
-            color: white;
-            text-align: center;
-            padding: 10px 0;
-           margin-top: 0; /* Add margin at the bottom */
-        }
+        
 
         .container {
             width: 70%; /* Set the width of the container */
@@ -76,11 +69,27 @@
     </style>
 </head>
 <body>
-    <div class="navbar">
-        <h1>Check Your Device Warranty </h1>
+    <nav style="display: flex; justify-content: space-between;height: 10%; align-items: center; padding: 1em; background-color: #b0b3c6; color: white; width: 100%; position: fixed; top: 0; left: 0; z-index: 1000;">
+        <div class="logo" style="font-size: 1.5em;">
+            <img src="../../statics/BitBox_logo1.png" alt="">
+        </div>
+        <div class="title" style="
+        font-size: 1.2em;
+        color: black;
+        font-weight: 600;
+        margin: 0 auto;
+        text-align: center;
+        width: 100%;
+        max-width: 600px; /* Optional: Adjust the max-width as needed */
+    ">
+        Check Warranty Claim
     </div>
+        <form action="/api/auth/logout" method="POST" style="margin-right: 10px; background-color: #b0b3c6;height: 10%;  border: none; align-items: end; justify-content: end; text-align: end; width: 0; margin-right: 100px;">
+            <button type="submit" style="background-color: #ff0000; color: white; border: none; padding: 10px; font-size: 1em; cursor: pointer; border-radius: 4px; transition: background-color 0.3s ease;">Logout</button>
+        </form>
+    </nav>
 
-    <form id="warrantyClaimForm" style="margin-top: 2%;">
+    <form id="warrantyClaimForm" style="margin-top: 8%;">
         <div>
             <label for="certificateId">Certificate ID:</label>
             <input type="text" id="certificateId" name="certificateId" required>
@@ -131,7 +140,7 @@
             };
 
             try {
-                const response = await fetch('http://localhost:5000/claim-warranty', {
+                const response = await fetch('http://localhost:5001/claim-warranty', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -153,7 +162,7 @@
             const certificateId = document.getElementById('checkCertificateId').value;
 
             try {
-                const response = await fetch(`http://localhost:5000/warrantyClaim/status/${certificateId}`, {
+                const response = await fetch(`http://localhost:5001/warrantyClaim/status/${certificateId}`, {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json'

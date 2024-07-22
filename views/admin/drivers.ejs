@@ -11,12 +11,12 @@
         <% drivers.forEach(driver => { %>
             <li>
                 <%= driver.name %> - <%= driver.serial %> - <%= driver.model %>
-                <form action="http://localhost:5000/admin/drivers/delete/<%= driver._id %>" method="POST">
+                <form action="http://localhost:5001/admin/drivers/delete/<%= driver._id %>" method="POST">
                     <button type="submit">Delete</button>
                 </form>
             </li>
         <% }); %>
     </ul>
-    <a href="http://localhost:5000/admin/dashboard">Back to Dashboard</a>
+    <a href="http://localhost:5001/admin/dashboard">Back to Dashboard</a>
 </body>
 </html>

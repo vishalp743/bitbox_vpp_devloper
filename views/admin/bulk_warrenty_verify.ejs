@@ -25,7 +25,7 @@
                     <strong>Pincode:</strong> <%= group.commonFields.pincode %><br>
                     <strong>State:</strong> <%= group.commonFields.state %><br>
                     <strong>Phone Number:</strong> <%= group.commonFields.phoneNumber %><br>
-                    <strong>Bill:</strong> <a href="http://localhost:5000/<%= group.commonFields.billPdf %>" target="_blank"><%= group.commonFields.billPdf %></a><br>
+                    <strong>Bill:</strong> <a href="http://localhost:5001/<%= group.commonFields.billPdf %>" target="_blank"><%= group.commonFields.billPdf %></a><br>
                     <strong>Verified:</strong> <%= group.commonFields.verify ? 'Yes' : 'No' %><br>
                     <strong>Vendor:</strong> <%= group.commonFields.purchaseDetails %><br>
                     <strong>Warranty Type:</strong> <%= group.commonFields.warrantyType %><br>
@@ -39,7 +39,7 @@
                     </ul>
 
                     <% if (!group.commonFields.verify) { %>
-                        <form action="http://localhost:5000/bulk-verify-warranty2" method="POST">
+                        <form action="http://localhost:5001/bulk-verify-warranty2" method="POST">
                             <input type="hidden" name="batch" value="<%=  group.commonFields.batch %>">
                             <input type="hidden" name="email" value="<%= group.commonFields.email %>">
                             <input type="hidden" name="name" value="<%= group.commonFields.name %>">
